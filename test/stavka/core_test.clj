@@ -138,7 +138,9 @@
     (is (= 1 ($l conf :some.config)))
     (is (= 1.0 ($f conf :some.config)))
     (is (= "1" ($s conf :some.config)))
-    (is (= false ($b conf :some.config)))))
+    (is (= false ($b conf :some.config)))
+    (is (= "bar" (get-in ($json conf :some.json) [:foo])))
+    ))
 
 (deftest test-env-no-transform
   (let [conf (using (env :disable-underscore-to-dot? true))]

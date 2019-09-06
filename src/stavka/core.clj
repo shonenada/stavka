@@ -1,4 +1,5 @@
 (ns stavka.core
+  (:require [cheshire.core :as json])
   (:require [stavka.protocols :as sp]
             [stavka.resolvers.env]
             [stavka.resolvers.options]
@@ -184,6 +185,19 @@
    (if-let [c ($ holders key)]
      (Boolean/valueOf c)
      (or default-value false))))
+
+(defn $json
+  "Get configuration as JSON"
+  ([key] (when-let [holders @global-config]
+           ($json holders key)))
+  ([holders key] ($json holders key nil))
+  ([holders key default-value]
+   (if-let [c ($ holders key)]
+     (try
+       (json/parse-string c keyword)
+       (catch Throwable e
+         default-value))
+     default-value)))
 
 (defn stop-updaters!
   "Stop updater associated with holders."
